@@ -3,5 +3,5 @@ framework:
     session:
         storage_id: session.storage.mock_file
     csrf_protection:
-        # Disable csrf token on while testing
+        # Disable csrf token while testing
         enabled: false

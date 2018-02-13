@@ -65,6 +65,7 @@ class RegisterControllerTest extends WebTestCase
         $response = $client->getResponse();
 
         $this->assertTrue($response->isRedirection());
+        $this->assertRegExp('/\/login$/', $response->headers->get('Location'));
 
         $user = $this->entityManager
             ->getRepository(User::class)
