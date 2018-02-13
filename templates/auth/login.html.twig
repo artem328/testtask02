@@ -1,5 +1,8 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout/auth.html.twig' %}
+{% set title = 'Login' %}
+{% block title %}{{ title }}{% endblock %}
+{% block pageTitle %}{{ title }}{% endblock %}
 
-{% block body %}
+{% block form %}
     {{ form(form) }}
 {% endblock %}

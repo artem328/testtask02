@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class LoginController extends Controller
 {
@@ -19,9 +20,10 @@ class LoginController extends Controller
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
+     * @param \Symfony\Component\Security\Http\Authentication\AuthenticationUtils $authenticationUtils
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function login(Request $request)
+    public function login(Request $request, AuthenticationUtils $authenticationUtils)
     {
         $form = $this->get('form.factory')
             ->createNamedBuilder(null)
@@ -32,7 +34,11 @@ class LoginController extends Controller
 
         $form->handleRequest($request);
 
-        return $this->render('auth/login.html.twig', ['form' => $form->createView()]);
+        if ($error = $authenticationUtils->getLastAuthenticationError()) {
+            $this->addFlash('danger', $error->getMessage());
+        }
+
+        return $this->render('auth/login.html.twig', ['form' => $form->createView(),]);
     }
 
 }

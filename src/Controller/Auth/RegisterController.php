@@ -35,7 +35,7 @@ class RegisterController extends Controller
         $user = new User();
 
         $form = $this->createForm(UserType::class, $user)
-            ->add('save', SubmitType::class);
+            ->add('register', SubmitType::class);
 
         $form->handleRequest($request);
 
