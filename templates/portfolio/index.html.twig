@@ -1,0 +1,28 @@
+{% extends 'layout/main.html.twig' %}
+
+{% block title %}Your portfolios{% endblock %}
+
+{% block content %}
+    <div class="mb-2">
+        <a class="btn btn-primary" href="{{ path('portfolio_create') }}">Add New</a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Creation Date</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for portfolio in paginator.iterator %}
+                <tr>
+                    <td>{{ portfolio.name }}</td>
+                    <td>{{ portfolio.createdAt|date('Y-m-d H:i:s') }}</td>
+                    <td><a href="{{ path('portfolio_edit', {portfolio: portfolio.id}) }}">Edit</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% include 'includes/pagination.html.twig' with {paginator: paginator} %}
+{% endblock %}

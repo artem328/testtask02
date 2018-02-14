@@ -1,0 +1,12 @@
+{% if paginator.maxPages > 1 %}
+    <nav>
+        <ul class="pagination">
+            {% for page in 1..paginator.maxPages %}
+                <li class="page-item{{ paginator.page == page ? ' active' : '' }}">
+                    <a class="page-link"
+                       href="{{ paginator.generateUrl(page) }}">{{ page }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+{% endif %}
