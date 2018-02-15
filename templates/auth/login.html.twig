@@ -1,8 +1,10 @@
 {% extends 'layout/auth.html.twig' %}
-{% set title = 'Login' %}
-{% block title %}{{ title }}{% endblock %}
-{% block pageTitle %}{{ title }}{% endblock %}
+
+{% block title %}Login{% endblock %}
 
 {% block form %}
     {{ form(form) }}
+    <div class="mb-2">
+        <a href="{{ path('register') }}">Register</a>
+    </div>
 {% endblock %}
