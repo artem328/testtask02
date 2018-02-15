@@ -12,6 +12,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return $this->render('dashboard.html.twig', ['user' => $this->getUser()]);
+        return $this->render('dashboard.html.twig');
     }
 }
