@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Controller\Traits\HasPaginationTrait;
+use App\Controller\Traits\ManagesUserOwnedEntitiesTrait;
 use App\Entity\Portfolio;
 use App\Form\Portfolio\PortfolioCreateType;
 use App\Form\Portfolio\PortfolioDeleteType;
@@ -22,7 +24,8 @@ use Symfony\Component\HttpFoundation\Response;
 class PortfolioController extends Controller
 {
 
-    use HasPaginationTrait;
+    use HasPaginationTrait,
+        ManagesUserOwnedEntitiesTrait;
 
     /**
      * @Route("/", name="portfolio_index")
@@ -86,6 +89,9 @@ class PortfolioController extends Controller
      */
     public function edit(Portfolio $portfolio, Request $request, EntityManagerInterface $entityManager): Response
     {
+
+        $this->abortIfNotOwnedByUser($this->getUser(), $portfolio);
+
         $form = $this->createForm(PortfolioEditType::class, $portfolio);
         $form->add('update', SubmitType::class);
 
@@ -119,6 +125,8 @@ class PortfolioController extends Controller
      */
     public function delete(Portfolio $portfolio, EntityManagerInterface $entityManager): Response
     {
+        $this->abortIfNotOwnedByUser($this->getUser(), $portfolio);
+
         $entityManager->remove($portfolio);
         $entityManager->flush();
 

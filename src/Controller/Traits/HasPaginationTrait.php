@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Traits;
 
 use App\Pagination\Paginator;
 use Doctrine\ORM\Query;

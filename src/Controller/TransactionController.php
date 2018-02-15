@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Controller\Traits\HasPaginationTrait;
+use App\Controller\Traits\ManagesUserOwnedEntitiesTrait;
 use App\Entity\Transaction;
 use App\Form\Transaction\TransactionCreateType;
 use App\Form\Transaction\TransactionDeleteType;
@@ -21,7 +23,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TransactionController extends Controller
 {
-    use HasPaginationTrait;
+    use HasPaginationTrait,
+        ManagesUserOwnedEntitiesTrait;
 
     /**
      * @Route("/", name="transaction_index")
@@ -84,6 +87,8 @@ class TransactionController extends Controller
      */
     public function edit(Transaction $transaction, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->abortIfNotOwnedByUser($this->getUser(), $transaction);
+
         $form = $this->createForm(TransactionEditType::class, $transaction);
         $form->add('update', SubmitType::class);
 
@@ -117,6 +122,8 @@ class TransactionController extends Controller
      */
     public function delete(Transaction $transaction, EntityManagerInterface $entityManager): Response
     {
+        $this->abortIfNotOwnedByUser($this->getUser(), $transaction);
+
         $entityManager->remove($transaction);
         $entityManager->flush();
 

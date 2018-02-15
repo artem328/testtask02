@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Timestamp\HasTimestampsInterface;
+use App\Entity\User\OwnedByUserInterface;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -11,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\TransactionRepository")
  * @ORM\Table("transactions")
  */
-class Transaction implements HasTimestampsInterface
+class Transaction implements HasTimestampsInterface, OwnedByUserInterface
 {
     /**
      * @ORM\Id
@@ -193,5 +194,14 @@ class Transaction implements HasTimestampsInterface
     public function setUpdatedAt(DateTime $timestamp): void
     {
         $this->updatedAt = $timestamp;
+    }
+
+    /**
+     * @param \App\Entity\User $user
+     * @return bool
+     */
+    public function isOwnedByUser(User $user): bool
+    {
+        return $this->getPortfolio()->getUser()->getId() === $user->getId();
     }
 }
