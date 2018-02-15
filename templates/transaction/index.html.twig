@@ -1,0 +1,36 @@
+{% extends 'layout/main.html.twig' %}
+
+{% block title %}Your transactions{% endblock %}
+
+{% block content %}
+    <div class="mb-2">
+        <a class="btn btn-primary" href="{{ path('transaction_create') }}">Add New</a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Symbol</th>
+                <th scope="col">Date</th>
+                <th scope="col">Operation</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+                <th scope="col">Total</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in paginator.iterator %}
+                <tr>
+                    <td>{{ transaction.symbol }}</td>
+                    <td>{{ transaction.createdAt|date('Y-m-d') }}</td>
+                    <td>{{ transaction.operation|capitalize }}</td>
+                    <td>{{ transaction.quantity }}</td>
+                    <td>{{ transaction.price }} $</td>
+                    <td>{{ transaction.total }} $</td>
+                    <td><a href="{{ path('transaction_edit', {transaction: transaction.id}) }}">Edit</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% include 'includes/pagination.html.twig' with {paginator: paginator} %}
+{% endblock %}
