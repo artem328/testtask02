@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PortfolioRepository")
+ * @ORM\Table("portfolios")
  */
 class Portfolio implements HasTimestampsInterface, OwnedByUserInterface
 {
