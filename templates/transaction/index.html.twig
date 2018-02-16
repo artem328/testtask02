@@ -27,7 +27,7 @@
                     <td>{{ transaction.quantity }}</td>
                     <td>{{ transaction.price }} $</td>
                     <td>{{ transaction.total }} $</td>
-                    <td><a href="{{ path('transaction_edit', {transaction: transaction.id}) }}">Edit</a></td>
+                    <td><a href="{{ path('transaction_edit', {'transaction': transaction.id}) }}">Edit</a></td>
                 </tr>
             {% endfor %}
         </tbody>

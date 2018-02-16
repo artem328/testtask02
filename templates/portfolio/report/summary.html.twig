@@ -1,0 +1,42 @@
+{% extends 'layout/main.html.twig' %}
+
+{% block title %}Summary for {{ portfolio.name }}{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Name</th>
+                <th>Current price</th>
+                <th>Quantity</th>
+                <th>Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in summary.stocks %}
+                <tr>
+                    <td>{{ stock.symbol }}</td>
+                    <td>{{ stock.name }}</td>
+                    <td>{{ stock.quote.marketPrice }} $</td>
+                    <td>{{ stock.quantity }}</td>
+                    <td>{{ stock.currentTotal }} $</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="4" class="text-right">Total (current cost):</th>
+                <td>{{ summary.currentCost|round(2) }} $</td>
+            </tr>
+            <tr>
+                <th colspan="4" class="text-right">Expenses:</th>
+                <td>{{ summary.totalExpenses|round(2) }} $</td>
+            </tr>
+            <tr>
+                <th colspan="4" class="text-right">Your earnings:</th>
+                <td>{{ summary.earnings|round(2) }} $ ({{ summary.earningsInPercent|round(2) }}%)</td>
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}
