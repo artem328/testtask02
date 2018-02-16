@@ -5,6 +5,7 @@ namespace App\Form\EventListener;
 use App\Finance\Api\ApiClientInterface;
 use App\Finance\Api\ApiException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -47,14 +48,15 @@ class TransactionEventSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            FormEvents::PRE_SUBMIT => 'onPreSetData',
+            FormEvents::PRE_SUBMIT => 'onPreSubmit',
+            FormEvents::POST_SUBMIT => 'onPostSubmit',
         ];
     }
 
     /**
      * @param \Symfony\Component\Form\FormEvent $event
      */
-    public function onPreSetData(FormEvent $event)
+    public function onPreSubmit(FormEvent $event): void
     {
         $transaction = $event->getData();
         $form = $event->getForm();
@@ -71,7 +73,7 @@ class TransactionEventSubscriber implements EventSubscriberInterface
 
         if ($transaction['price'] && $transaction['quantity']) {
             $multiplier = 'sell' === $transaction['operation'] ? -1 : 1;
-            $form->add('total', NumberType::class);
+            $form->add('total', HiddenType::class);
             $transaction['total'] = (float)($transaction['price'] * $transaction['quantity']) * $multiplier;
         }
 
@@ -82,5 +84,13 @@ class TransactionEventSubscriber implements EventSubscriberInterface
         }
 
         $event->setData($transaction);
+    }
+
+    /**
+     * @param \Symfony\Component\Form\FormEvent $event
+     */
+    public function onPostSubmit(FormEvent $event): void
+    {
+//        $event->getForm()->remove('total');
     }
 }

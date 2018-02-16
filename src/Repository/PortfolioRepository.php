@@ -29,4 +29,5 @@ class PortfolioRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
 }

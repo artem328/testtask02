@@ -34,4 +34,11 @@ services:
             - name: doctrine.event_subscriber
 
 
-#    App\Finance\Api\ApiClientInterface: '@App\Finance\Api\YahooFinance\ApiClient'
+    transaction_valid_sell_quantity_validator:
+            class: App\Validator\TransactionValidSellQuantityValidator
+            arguments:
+                - "@doctrine.orm.entity_manager"
+            tags:
+                -
+                    name: validator.constraint_validator
+                    alias: transaction_valid_sell_quantity

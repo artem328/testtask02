@@ -6,11 +6,14 @@ use App\Entity\Timestamp\HasTimestampsInterface;
 use App\Entity\User\OwnedByUserInterface;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as AppAssert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TransactionRepository")
  * @ORM\Table("transactions")
+ * @AppAssert\TransactionValidSellQuantity()
  */
 class Transaction implements HasTimestampsInterface, OwnedByUserInterface
 {
@@ -203,5 +206,19 @@ class Transaction implements HasTimestampsInterface, OwnedByUserInterface
     public function isOwnedByUser(User $user): bool
     {
         return $this->getPortfolio()->getUser()->getId() === $user->getId();
+    }
+
+    /**
+     * @param string $operation
+     */
+    public function setOperation(string $operation): void
+    {
+        if (!in_array($operation, ['sell', 'buy'])) {
+            throw new InvalidArgumentException("Invalid operation [$operation]");
+        }
+
+        if ($operation !== $this->getOperation()) {
+            $this->setTotal($this->getTotal() * -1);
+        }
     }
 }
