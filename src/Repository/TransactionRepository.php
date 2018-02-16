@@ -9,6 +9,8 @@ use App\Finance\Api\ApiException;
 use App\Stock\Stock;
 use App\Stock\StockContainer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class TransactionRepository extends ServiceEntityRepository
@@ -99,5 +101,24 @@ class TransactionRepository extends ServiceEntityRepository
         }
 
         return new StockContainer($results);
+    }
+
+    /**
+     * @param \App\Entity\Portfolio $portfolio
+     * @return \App\Entity\Transaction|null
+     */
+    public function findFirstTransactionInPortfolio(Portfolio $portfolio): ?Transaction
+    {
+        try {
+            return $this->createQueryBuilder('t')
+                ->where('t.portfolio = :portfolio')->setParameter('portfolio', $portfolio)
+                ->orderBy('t.createdAt', 'ASC')
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getSingleResult();
+        } catch (NoResultException | NonUniqueResultException $e) {
+        }
+
+        return null;
     }
 }

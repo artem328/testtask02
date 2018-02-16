@@ -33,13 +33,10 @@ class PortfolioReportController extends Controller
     {
         $this->abortIfNotOwnedByUser($this->getUser(), $portfolio);
 
-        $stocks = $entityManager->getRepository(Transaction::class)
-            ->getStocksInPortfolio($portfolio);
-
         return $this->render('portfolio/report/summary.html.twig',
             [
                 'portfolio' => $portfolio,
-                'summary' => new SummaryReport($stocks),
+                'summary' => new SummaryReport($entityManager, $portfolio),
             ]);
     }
 }

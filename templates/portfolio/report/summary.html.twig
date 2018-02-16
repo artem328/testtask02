@@ -37,6 +37,10 @@
                 <th colspan="4" class="text-right">Your earnings:</th>
                 <td>{{ summary.earnings|round(2) }} $ ({{ summary.earningsInPercent|round(2) }}%)</td>
             </tr>
+            <tr>
+                <th colspan="4" class="text-right">Average year income:</th>
+                <td>{{ summary.averageYearIncomeInPercents|round(2) }}%</td>
+            </tr>
         </tfoot>
     </table>
 {% endblock %}

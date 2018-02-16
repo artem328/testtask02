@@ -2,7 +2,11 @@
 
 namespace App\Report;
 
+use App\Entity\Portfolio;
+use App\Entity\Transaction;
 use App\Stock\StockContainer;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 
 class SummaryReport
 {
@@ -12,12 +16,26 @@ class SummaryReport
     private $stocks;
 
     /**
-     * SummaryReport constructor.
-     * @param \App\Stock\StockContainer $stocks
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
-    public function __construct(StockContainer $stocks)
+    private $entityManager;
+
+    /**
+     * @var \App\Entity\Portfolio
+     */
+    private $portfolio;
+
+    /**
+     * SummaryReport constructor.
+     * @param \Doctrine\ORM\EntityManagerInterface $entityManager
+     * @param \App\Entity\Portfolio $portfolio
+     */
+    public function __construct(EntityManagerInterface $entityManager, Portfolio $portfolio)
     {
-        $this->stocks = $stocks;
+        $this->entityManager = $entityManager;
+        $this->portfolio = $portfolio;
+
+        $this->initStocks();
     }
 
     /**
@@ -70,5 +88,30 @@ class SummaryReport
     public function getEarningsInPercent(): float
     {
         return ($this->getCurrentCost() * 100 / $this->getTotalExpenses()) - 100;
+    }
+
+    /**
+     * @return float
+     */
+    public function getAverageYearIncomeInPercents(): float
+    {
+        $firstTransaction = $this->entityManager->getRepository(Transaction::class)
+            ->findFirstTransactionInPortfolio($this->portfolio);
+
+        if (null === $firstTransaction) {
+            return 0;
+        }
+
+        $today = new DateTime('today');
+        $firstTransactionDay = $firstTransaction->getCreatedAt();
+        $daysFromFirstTransaction = $today->diff($firstTransactionDay)->days;
+
+        return 365 * $this->getEarningsInPercent() / $daysFromFirstTransaction;
+    }
+
+    private function initStocks(): void
+    {
+        $this->stocks = $this->entityManager->getRepository(Transaction::class)
+            ->getStocksInPortfolio($this->portfolio);
     }
 }
