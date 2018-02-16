@@ -49,7 +49,7 @@ class HistoricalData implements HistoricalDataInterface
      */
     public function getName(): string
     {
-        return '';
+        return $this->name;
     }
 
     /**
@@ -57,6 +57,46 @@ class HistoricalData implements HistoricalDataInterface
      */
     public function getSymbol(): string
     {
-        return '';
+        return $this->symbol;
+    }
+
+    /**
+     * @return float
+     */
+    public function getOpenPrice(): float
+    {
+        return $this->historicalData->getOpen();
+    }
+
+    /**
+     * @return float
+     */
+    public function getClosePrice(): float
+    {
+        return $this->historicalData->getClose();
+    }
+
+    /**
+     * @return float
+     */
+    public function getLowPrice(): float
+    {
+        return $this->historicalData->getLow();
+    }
+
+    /**
+     * @return float
+     */
+    public function getHighPrice(): float
+    {
+        return $this->historicalData->getHigh();
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDate(): \DateTime
+    {
+        return $this->historicalData->getDate();
     }
 }

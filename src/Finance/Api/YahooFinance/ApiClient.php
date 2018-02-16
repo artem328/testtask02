@@ -106,7 +106,7 @@ class ApiClient implements ApiClientInterface
         $results = [];
 
         foreach ($historicalDataItems as $historicalData) {
-            $results[] = new HistoricalData($historicalData, $quote->getName(), $quote->getSymbol());
+            $results[] = new HistoricalData($historicalData, $quote->getSymbol(), $quote->getName());
         }
 
         return $results;

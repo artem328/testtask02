@@ -18,3 +18,11 @@ in project root directory. Edit this file according your needs (see [documentati
 
 ### Usage
 For start configured homestead, simply run `vagrant up` from project root. More information [here](https://laravel.com/docs/5.5/homestead#launching-the-vagrant-box).
+
+## Demo data
+For setup demo data, you can use fixtures. 
+Run `bin/console doctrine:fixtures:load` to upload data to database.
+
+### Users
+Demo data contain 20 users with username `userN` where `N` is sequential number from 1 to 20.
+Passwords are same for all users: `pass123`.  
