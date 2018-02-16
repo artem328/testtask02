@@ -111,7 +111,17 @@ class Paginator extends BasePaginator
     {
         $query = $this->getPageParam().'='.$page;
 
-        return $this->getUrl().(strpos($this->getUrl(), '?') !== false ? '&' : '?').$query;
+        $url = $this->getUrl();
+
+        // Remove page parameter if it's present in url
+        if (preg_match('/^(.*?)(\?|&)'.preg_quote($this->pageParam, '/').'=(.*?)(&|$)(.*?)$/', $url, $matches)) {
+            $url = $matches[1];
+            if ($matches[4] && $matches[5]) {
+                $url .= $matches[2].$matches[5];
+            }
+        }
+
+        return $url.(strpos($url, '?') !== false ? '&' : '?').$query;
     }
 
 }
