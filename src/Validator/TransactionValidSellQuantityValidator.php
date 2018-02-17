@@ -41,7 +41,7 @@ class TransactionValidSellQuantityValidator extends ConstraintValidator
                 ->getRepository(Transaction::class)
                 ->countStocksInPortfolio($transaction->getPortfolio(), $transaction->getSymbol());
 
-            if ($transaction->getQuantity() > $owned) {
+            if ('sell' === $transaction->getOperation() && $transaction->getQuantity() > $owned) {
                 $this->context->addViolation('You don\'t have such quantity of '.$transaction->getSymbol().' in this portfolio.');
             }
         }
