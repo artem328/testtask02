@@ -12,6 +12,8 @@ services:
                             # fetching services directly from the container via $container->get() won't work.
                             # The best practice is to be explicit about your dependencies anyway.
 
+
+
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
@@ -26,3 +28,17 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\EventListener\TimestampsAutoUpdaterEventSubscriber:
+        tags:
+            - name: doctrine.event_subscriber
+
+
+    transaction_valid_sell_quantity_validator:
+            class: App\Validator\TransactionValidSellQuantityValidator
+            arguments:
+                - "@doctrine.orm.entity_manager"
+            tags:
+                -
+                    name: validator.constraint_validator
+                    alias: transaction_valid_sell_quantity
