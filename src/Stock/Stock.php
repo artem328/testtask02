@@ -3,7 +3,9 @@
 namespace App\Stock;
 
 use App\Entity\Portfolio;
+use App\Finance\Api\HistoricalDataInterface;
 use App\Finance\Api\QuoteInterface;
+use DateTime;
 
 class Stock
 {
@@ -36,6 +38,11 @@ class Stock
      * @var \App\Finance\Api\QuoteInterface
      */
     private $quote;
+
+    /**
+     * @var \App\Finance\Api\HistoricalDataInterface[]
+     */
+    private $historicalData = [];
 
     /**
      * @return string
@@ -145,4 +152,37 @@ class Stock
         $this->total = $total;
     }
 
+    /**
+     * @param \App\Finance\Api\HistoricalDataInterface $historicalData
+     */
+    public function addHistoricalData(HistoricalDataInterface $historicalData)
+    {
+        $this->historicalData[$historicalData->getDate()->format('Y-m-d')] = $historicalData;
+    }
+
+    /**
+     * @param \DateTime $date
+     * @return \App\Finance\Api\HistoricalDataInterface|null
+     */
+    public function getHistoricalData(DateTime $date): ?HistoricalDataInterface
+    {
+        return $this->hasHistoricalData($date) ? $this->historicalData[$date->format('Y-m-d')] : null;
+    }
+
+    /**
+     * @param \DateTime $date
+     * @return bool
+     */
+    public function hasHistoricalData(DateTime $date): bool
+    {
+        return isset($this->historicalData[$date->format('Y-m-d')]);
+    }
+
+    /**
+     * @return \App\Finance\Api\HistoricalDataInterface[]
+     */
+    public function getAllHistoricalData(): array
+    {
+        return $this->historicalData;
+    }
 }

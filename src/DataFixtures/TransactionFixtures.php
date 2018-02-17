@@ -56,7 +56,7 @@ class TransactionFixtures extends Fixture implements DependentFixtureInterface
     /**
      * @var int
      */
-    private $maxTransactions = 30;
+    private $maxTransactions = 100;
 
     /**
      * @var int
@@ -111,8 +111,7 @@ class TransactionFixtures extends Fixture implements DependentFixtureInterface
                 $transaction->setSymbol($symbol);
 
                 if ($h = $this->getHistoricalData($symbol, $transaction->getCreatedAt())) {
-                    $avgPrice = ($h->getOpenPrice() + $h->getClosePrice() + $h->getLowPrice() + $h->getHighPrice()) / 4;
-                    $transaction->setPrice($avgPrice);
+                    $transaction->setPrice($h->getAveragePrice());
                 }
 
                 $date = $this->getDate($date);

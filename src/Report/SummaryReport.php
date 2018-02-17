@@ -39,6 +39,14 @@ class SummaryReport
     }
 
     /**
+     * @return \App\Entity\Portfolio
+     */
+    public function getPortfolio(): Portfolio
+    {
+        return $this->portfolio;
+    }
+
+    /**
      * @return \App\Stock\StockContainer
      */
     public function getStocks(): StockContainer

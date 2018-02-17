@@ -3,6 +3,7 @@
 namespace App\Stock;
 
 use ArrayAccess;
+use Closure;
 use Iterator;
 use LogicException;
 
@@ -23,6 +24,20 @@ class StockContainer implements Iterator, ArrayAccess
         foreach ($stocks as $key => $stock) {
             $this->add($stock);
         }
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAllSymbols(): array
+    {
+        $symbols = [];
+
+        foreach ($this->stocks as $stock) {
+            $symbols[] = $stock->getSymbol();
+        }
+
+        return $symbols;
     }
 
     /**
@@ -70,6 +85,45 @@ class StockContainer implements Iterator, ArrayAccess
     public function getAll(): array
     {
         return $this->stocks;
+    }
+
+    /**
+     * @param \Closure $callback
+     */
+    public function each(Closure $callback): void
+    {
+        foreach ($this->stocks as $key => $stock) {
+            $callback($stock, $key);
+        }
+    }
+
+    /**
+     * @param \Closure $callback
+     * @return \App\Stock\StockContainer
+     */
+    public function map(Closure $callback): StockContainer
+    {
+        $newStocks = [];
+
+        foreach ($this->stocks as $key => $stock) {
+            $newStocks[] = $callback($stock, $key);
+        }
+
+        return new StockContainer($newStocks);
+    }
+
+    /**
+     * @param \Closure $callback
+     * @param mixed|null $value
+     * @return mixed
+     */
+    public function reduce(Closure $callback, $value = null)
+    {
+        foreach ($this->stocks as $key => $stock) {
+            $value = $callback($value, $stock, $key);
+        }
+
+        return $value;
     }
 
     /**

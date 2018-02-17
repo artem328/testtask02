@@ -1,0 +1,32 @@
+{% extends 'layout/main.html.twig' %}
+
+{% block title %}History for {{ history.portfolio.name }}{% endblock %}
+
+{% block content %}
+    <div class="">
+        Select interval
+        {% for interval in intervals %}
+            <a class="{{ history.interval == interval ? 'font-weight-bold' : '' }}"
+               href="{{ path('portfolio_report_history', {'portfolio': history.portfolio.id, 'interval': interval}) }}">{{ interval|capitalize }}</a>
+        {% endfor %}
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Portfolio cost</th>
+                <th>Difference</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in history.iterator %}
+                <tr>
+                    <td>{{ item.date|date(history.dateFormat) }}</td>
+                    <td>{{ item.cost|round(2) }} $</td>
+                    <td>{{ item.costDiffWithPrevious|round(2) }} $ ({{ item.costDiffInPercentWithPrevious|round(2) }}%)
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

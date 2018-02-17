@@ -8,6 +8,7 @@ use App\Finance\Api\ApiClientInterface;
 use App\Finance\Api\ApiException;
 use App\Stock\Stock;
 use App\Stock\StockContainer;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -54,18 +55,32 @@ class TransactionRepository extends ServiceEntityRepository
 
     /**
      * @param \App\Entity\Portfolio $portfolio
+     * @param \DateTime|null $fromDate
+     * @param \DateTime|null $toDate
      * @return \App\Stock\StockContainer
-     *
      */
-    public function getStocksInPortfolio(Portfolio $portfolio): StockContainer
-    {
-        $rawResults = $this->createQueryBuilder('t')
+    public function getStocksInPortfolio(
+        Portfolio $portfolio,
+        ?DateTime $fromDate = null,
+        ?DateTime $toDate = null
+    ): StockContainer {
+
+        $queryBuilder = $this->createQueryBuilder('t')
             ->where('t.portfolio = :portfolio')->setParameter('portfolio', $portfolio)
             ->groupBy('t.symbol')
             ->select('t.symbol')
             ->addSelect('SUM(CASE WHEN t.total < 0 THEN -1 * t.quantity ELSE t.quantity END) as quantity')
-            ->addSelect('SUM(t.total) AS total')
-            ->getQuery()
+            ->addSelect('SUM(t.total) AS total');
+
+        if (null !== $fromDate) {
+            $queryBuilder->andWhere('t.createdAt >= :from_date')->setParameter('from_date', $fromDate);
+        }
+
+        if (null !== $toDate) {
+            $queryBuilder->andWhere('t.createdAt <= :to_date')->setParameter('to_date', $toDate);
+        }
+
+        $rawResults = $queryBuilder->getQuery()
             ->execute();
 
         $results = [];
@@ -120,5 +135,34 @@ class TransactionRepository extends ServiceEntityRepository
         }
 
         return null;
+    }
+
+    /**
+     * @param \App\Entity\Portfolio $portfolio
+     * @return \App\Entity\Transaction[]
+     */
+    public function findAllTransactionsInPortfolio(Portfolio $portfolio): array
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.portfolio = :portfolio')->setParameter('portfolio', $portfolio)
+            ->orderBy('t.createdAt', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param \App\Entity\Portfolio $portfolio
+     * @return string[]
+     */
+    public function findAllSymbolsInPortfolio(Portfolio $portfolio): array
+    {
+        $results = $this->createQueryBuilder('t')
+            ->where('t.portfolio = :portfolio')->setParameter('portfolio', $portfolio)
+            ->groupBy('t.symbol')
+            ->select('t.symbol')
+            ->getQuery()
+            ->getResult();
+
+        return array_column($results, 'symbol');
     }
 }

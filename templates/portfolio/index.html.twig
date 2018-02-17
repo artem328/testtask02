@@ -20,7 +20,9 @@
                     <td>{{ portfolio.name }}</td>
                     <td>{{ portfolio.createdAt|date('Y-m-d H:i:s') }}</td>
                     <td><a href="{{ path('portfolio_edit', {'portfolio': portfolio.id}) }}">Edit</a> |
-                        <a href="{{ path('portfolio_report_summary', {'portfolio': portfolio.id}) }}">Summary</a></td>
+                        <a href="{{ path('portfolio_report_summary', {'portfolio': portfolio.id}) }}">Summary</a> |
+                        <a href="{{ path('portfolio_report_history', {'portfolio': portfolio.id}) }}">Last 2 years
+                            changes</a></td>
                 </tr>
             {% endfor %}
         </tbody>

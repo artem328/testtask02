@@ -101,7 +101,8 @@ class ApiClient implements ApiClientInterface
                 $dateEnd
             );
         } catch (Exception $exception) {
-            throw new ApiException("Couldn't get historical data for symbol [$symbol]", 0, $exception);
+            $date = $dateStart == $dateEnd ? 'of '.$dateStart->format('Y-m-d') : 'from '.$dateStart->format('Y-m-d').' till '.$dateEnd->format('Y-m-d');
+            throw new ApiException("Couldn't get historical data for symbol [$symbol] $date", 0, $exception);
         }
         $results = [];
 

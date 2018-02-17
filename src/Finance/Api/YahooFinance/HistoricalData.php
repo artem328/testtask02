@@ -3,6 +3,7 @@
 namespace App\Finance\Api\YahooFinance;
 
 use App\Finance\Api\HistoricalDataInterface;
+use DateTime;
 use Scheb\YahooFinanceApi\Results\HistoricalData as SchebHistoricalData;
 
 class HistoricalData implements HistoricalDataInterface
@@ -95,8 +96,16 @@ class HistoricalData implements HistoricalDataInterface
     /**
      * @return \DateTime
      */
-    public function getDate(): \DateTime
+    public function getDate(): DateTime
     {
         return $this->historicalData->getDate();
+    }
+
+    /**
+     * @return float
+     */
+    public function getAveragePrice(): float
+    {
+        return $this->getLowPrice() + $this->getHighPrice() + $this->getOpenPrice() + $this->getClosePrice() / 4;
     }
 }

@@ -31,4 +31,9 @@ interface HistoricalDataInterface extends BaseQuoteInterface
      * @return float
      */
     public function getHighPrice(): float;
+
+    /**
+     * @return float
+     */
+    public function getAveragePrice(): float;
 }
